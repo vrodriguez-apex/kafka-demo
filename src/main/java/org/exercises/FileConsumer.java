@@ -5,7 +5,6 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.example.ProducerDemo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +14,7 @@ import java.util.Properties;
 
 public class FileConsumer {
 
-    private static final Logger log = LoggerFactory.getLogger(ProducerDemo.class);
+    private static final Logger log = LoggerFactory.getLogger(FileConsumer.class);
 
     public static void main(String[] args) {
         String bootstrapServers = "localhost:9092";
