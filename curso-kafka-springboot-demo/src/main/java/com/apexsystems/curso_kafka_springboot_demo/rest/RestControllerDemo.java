@@ -5,8 +5,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/personas")
+@RequestMapping("/objetos")
 public class RestControllerDemo {
+    //PRACTICE 3
     @GetMapping
     public String mostrarGetMapping(){
         return "Este es un mensaje desde RestController personas con la funcion: mostrarGetMapping";
