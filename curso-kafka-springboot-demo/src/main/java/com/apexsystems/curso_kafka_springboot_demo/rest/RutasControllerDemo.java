@@ -3,10 +3,7 @@ package com.apexsystems.curso_kafka_springboot_demo.rest;
 import com.apexsystems.curso_kafka_springboot_demo.model.Product;
 import com.apexsystems.curso_kafka_springboot_demo.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -50,4 +47,12 @@ public class RutasControllerDemo {
         return "saved products";
     }
 
+    //PRACTICE 5
+    @GetMapping("/division/{num}")
+    public int checkCompute(@PathVariable int num) {
+        if (num == 0) {
+            throw new NullPointerException();
+        }
+        return (int)100 / num;
+    }
 }
