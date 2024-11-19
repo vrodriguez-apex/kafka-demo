@@ -1,7 +1,6 @@
 package com.apexsystems.curso_kafka_springboot_demo.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller

@@ -2,8 +2,6 @@ package com.apexsystems.curso_kafka_springboot_demo.rest;
 
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/objetos")
 public class RestControllerDemo {
