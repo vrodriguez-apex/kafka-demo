@@ -1,7 +1,7 @@
 package com.apexsystems.curso_kafka_springboot_demo.model;
 
 public class Product {
-    //PRACTICE 3
+    //PRACTICE 4.1
     private String name;
     private int price;
 

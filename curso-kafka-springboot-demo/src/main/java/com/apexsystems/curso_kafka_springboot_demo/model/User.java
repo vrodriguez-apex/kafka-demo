@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Positive;
 
 
 public class User {
-    //PRACTICE 4
+    //PRACTICE 4.1 4.3
     @NotNull
     private String userName;
 
