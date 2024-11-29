@@ -1,26 +1,20 @@
 import time
-import requests
 import sys
-from kafka import KafkaProducer
+from src.producer_functions import create_producer, get_market_data
 
-TOPIC = 'bitusdt-avg-topic'
-API = 'https://data-api.binance.vision'
-ENDPOINT = 'api/v3/avgPrice'
+topic = 'bitusdt-avg-topic'
+api = 'https://data-api.binance.vision'
+endpoint = 'api/v3/avgPrice'
 parameters = {
     'symbol': 'BTCUSDT'
 }
 
-producer = KafkaProducer(
-    bootstrap_servers=["localhost:9092"]
-)
+producer = create_producer()
 
 try:
     while True:
-        response = requests.get(
-            f'{API}/{ENDPOINT}',
-            params=parameters
-        )
-        producer.send(TOPIC, value=response.content)
+        response = get_market_data(api, endpoint, parameters)
+        producer.send(topic, value=response.content)
         print(response.json())
         time.sleep(30)
 except KeyboardInterrupt:
