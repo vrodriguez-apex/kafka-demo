@@ -5,7 +5,7 @@ from sqlite3.dbapi2 import Cursor
 from datetime import datetime
 from kafka.consumer.fetcher import ConsumerRecord
 
-def handling_message(message: ConsumerRecord):
+def handling_message(message: ConsumerRecord) -> str:
     message_value = message.value
     json_value = json.loads(message_value)
     json_value['closeTime'] = datetime.fromtimestamp(json_value['closeTime']/1000).strftime('%Y-%m-%d %H:%M:%S')
@@ -29,13 +29,13 @@ def db_materialization(table, record, cur: Cursor):
     except Exception as e:
         print(f'An unexpected error occurred: {e}')
 
-def create_consumer(topic, server = 'localhost', port = 9092):
+def create_consumer(topic, server = 'localhost', port = 9092, offset_reset = 'earliest'):
     consumer = KafkaConsumer(
         topic,
         bootstrap_servers=[f'{server}:{port}'],
         enable_auto_commit=False,
         group_id='my_group_id',
         value_deserializer=lambda x: x.decode('utf-8'),
-        auto_offset_reset='earliest'
+        auto_offset_reset=offset_reset
     )
     return consumer
