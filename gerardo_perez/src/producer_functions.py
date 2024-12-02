@@ -30,10 +30,14 @@ def get_market_data(type_market: str, symbol: str, interval: Union[int, str, Non
     return response
 
 def clean_market_data(response: requests.Response, type_market: str):
-    json_response = response.json()
-    if type_market == 'avgPrice':
-        json_response = {key: json_response[key] for key in ['price', 'closeTime']}
-        return str(json_response).replace("\'", "\"")
+    if response.status_code == 200:
+        json_response = response.json()
+        if type_market == 'avgPrice':
+            json_response = {key: json_response[key] for key in ['price', 'closeTime']}
+            return str(json_response).replace("\'", "\"")
+    else:
+        print('Algo salió mal. Adiós.')
+        sys.exit()
 
 def processing_market_data(type_market_data: str, symbol: str, interval: Union[int, str, None] = None, rows: Union[int, str, None] = None):
     response = get_market_data(type_market_data,symbol,interval,rows)
