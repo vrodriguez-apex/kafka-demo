@@ -1,12 +1,9 @@
 from kafka import KafkaConsumer
-import sys
 import json
 import sqlite3
-from sqlite3.dbapi2 import Cursor, Connection
+from sqlite3.dbapi2 import Cursor
 from datetime import datetime
 from kafka.consumer.fetcher import ConsumerRecord
-
-TOPIC = 'bitusdt-avg-topic'
 
 def handling_message(message: ConsumerRecord):
     message_value = message.value
@@ -20,15 +17,22 @@ def db_engine(db_name: str = ':memory:'):
     return conn, cur
 
 def create_db_table(name: str, cur: Cursor):
-    cur.execute(f'CREATE TABLE IF NOT EXISTS {name}(id INTEGER PRIMARY KEY, closeTime TEXT, price REAL, mins TEXT)')
+    cur.execute(f'CREATE TABLE IF NOT EXISTS {name}(id INTEGER PRIMARY KEY, closeTime TEXT, price REAL)')
 
-def db_materialization(record, cur: Cursor):
-    cur.execute('INSERT INTO bitusdt(closeTime, price, mins) VALUES (:closeTime, :price, :mins)', record)
+def db_materialization(table, record, cur: Cursor):
+    try:
+        cur.execute(f'INSERT INTO {table}(closeTime, price) VALUES (:closeTime, :price)', record)
+    except sqlite3.IntegrityError as e:
+        print(f'Integrity error occurred: {e}')
+    except sqlite3.OperationalError as e:
+        print(f'Operational error occurred: {e}')
+    except Exception as e:
+        print(f'An unexpected error occurred: {e}')
 
-def create_consumer(topic):
+def create_consumer(topic, server = 'localhost', port = 9092):
     consumer = KafkaConsumer(
         topic,
-        bootstrap_servers=['localhost:9092'],
+        bootstrap_servers=[f'{server}:{port}'],
         enable_auto_commit=False,
         group_id='my_group_id',
         value_deserializer=lambda x: x.decode('utf-8'),
