@@ -1,22 +1,19 @@
 import time
 import sys
-from src.producer_functions import create_producer, get_market_data
+from src.producer_functions import create_producer, processing_market_data
 
-topic = 'bitusdt-avg-topic'
-api = 'https://data-api.binance.vision'
-endpoint = 'api/v3/avgPrice'
-parameters = {
-    'symbol': 'BTCUSDT'
-}
-
+type_market_data = 'avgPrice'
+symbol = 'BTCUSDT'
+interval = 10
+topic = f'{symbol}_{type_market_data}'
 producer = create_producer()
 
 try:
     while True:
-        response = get_market_data(api, endpoint, parameters)
-        producer.send(topic, value=response.content)
-        print(response.json())
-        time.sleep(30)
+        response = processing_market_data(type_market_data, symbol)
+        producer.send(topic, value=str(response).encode("utf-8"))
+        print(response)
+        time.sleep(interval)
 except KeyboardInterrupt:
     print('Cerrando producer...')
     sys.exit()
