@@ -3,8 +3,8 @@ from src.consumer_functions import create_consumer, db_engine, create_db_table, 
 
 topic = 'BTCUSDT_avgPrice'
 
-consumer = create_consumer(topic)
-conn, cur = db_engine()
+consumer = create_consumer(topic, offset_reset='latest')
+conn, cur = db_engine('db.sqlite3')
 create_db_table(topic, cur)
 conn.commit()
 
@@ -17,7 +17,6 @@ try:
 
 except KeyboardInterrupt:
     print('Cerrando consumer...')
-    print(cur.execute(f'select * from {topic}').fetchall())
     cur.close()
     conn.close()
     sys.exit()
