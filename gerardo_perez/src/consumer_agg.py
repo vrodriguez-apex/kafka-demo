@@ -1,26 +1,13 @@
 import faust
 import json
 import numpy as np
-import sqlite3	
 import sys
-from sqlite3.dbapi2 import Cursor
 from datetime import datetime
-
-from consumer_functions import db_engine, create_db_table
-
-def db_materialization(table, record, cur: Cursor):
-    try:
-        cur.execute(f'INSERT INTO {table}(closeTime, price) VALUES (:closeTime, :price)', record)
-    except sqlite3.IntegrityError as e:
-        print(f'Integrity error occurred: {e}')
-    except sqlite3.OperationalError as e:
-        print(f'Operational error occurred: {e}')
-    except Exception as e:
-        print(f'An unexpected error occurred: {e}')
+from src.consumer_functions import db_engine, create_db_table, db_materialization
 
 topic_name = 'BTCUSDT_avgPrice'
 
-conn, cur = db_engine()
+conn, cur = db_engine('db.sqlite3')
 create_db_table('agg_table', cur)
 conn.commit()
 
@@ -33,7 +20,7 @@ schema = faust.Schema(value_serializer='json')
 
 topic = app.topic(topic_name, schema=schema, partitions=1)
 
-avg_price = app.Table("BTCUSDT_avgPrice_min5", default=int, partitions=1).tumbling(6)
+avg_price = app.Table("BTCUSDT_avgPrice", default=int, partitions=1).tumbling(60)
 
 try:
     @app.agent(topic)
@@ -46,13 +33,12 @@ try:
             avg_price['qty'] += 1
             avg_price['price_sum'] += float(json_value['price'])
             avg_price['avg'] = np.divide(float(avg_price['price_sum'].value()), avg_price['qty'].value())
-            # if avg_price['qty'].value() == 3:
-            print("Average Price: ", avg_price['avg'].value())
-            string = '{"closeTime": ' + '"' + str(avg_price["close_time"].value()) + '"' + ', "price":' + str(avg_price["avg"].value()) + '}'
-            print(string)
-            db_materialization('agg_table', json.loads(string), cur)
-            conn.commit()
-            print(cur.execute(f'select * from agg_table').fetchall())
+            print('Current Price:', float(json_value['price']))
+            if avg_price['qty'].value() == 5:
+                print("Last Minute Average Price: ", avg_price['avg'].value())
+                string = '{"closeTime": ' + '"' + str(avg_price["close_time"].value()) + '"' + ', "price":' + str(avg_price["avg"].value()) + '}'
+                db_materialization('agg_table', json.loads(string), cur)
+                conn.commit()
 
 except KeyboardInterrupt:
     print('Cerrando consumer...')
