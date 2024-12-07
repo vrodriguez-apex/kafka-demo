@@ -1,0 +1,11 @@
+venv/
+
+data/
+tmp/
+
+*.log
+
+.env
+.docker/
+
+.vscode/

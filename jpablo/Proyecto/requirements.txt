@@ -1,0 +1,12 @@
+scipy
+pandas
+numpy
+sqlalchemy
+kafka-python
+psycopg2-binary
+matplotlib
+requests
+python-dateutil
+ipython
+sklearn
+seaborn
