@@ -47,5 +47,5 @@ build/
 /python_demo_dev
 
 ### secrets
-python_project\Hmorales\secrets\dbcredentials.json
-python_project\Hmorales\secrets\criptoconvertAPI.json
+python_project/Hmorales/secrets/dbcredentials.json
+python_project/Hmorales/secrets/criptoconvertAPI.json
