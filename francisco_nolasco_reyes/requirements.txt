@@ -1,0 +1,13 @@
+confluent-kafka~=2.6.1
+kafka-python~=2.0.2
+pip~=24.3.1
+wheel~=0.43.0
+setuptools~=75.6.0
+python-dotenv~=1.0.1
+mysql-connector-python~=9.1.0
+numpy~=2.0.2
+requests~=2.32.3
+charset-normalizer~=3.4.0
+urllib3~=2.2.3
+opencv-python~=4.10.0.84
+pillow~=11.0.0
