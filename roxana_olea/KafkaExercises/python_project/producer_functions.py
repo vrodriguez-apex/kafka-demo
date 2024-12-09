@@ -27,6 +27,12 @@ def processing_market_data(type_market_data, symbol, interval, rows):
     return clean_data
 
 def transformations(data, smooth_interval, smooth_exp):
+    # EMA Calculation
     data['ema'] = data['close'].ewm(span=smooth_interval, adjust=False).mean()
+    # SMA Calculation
+    data['sma'] = data['close'].rolling(window=smooth_interval).mean()
+    # AVG Volume
+    data['avg_volume'] = data['volume'].rolling(window=smooth_interval).mean()
     data['timestamp'] = data['timestamp'].astype(str)
+    
     return data

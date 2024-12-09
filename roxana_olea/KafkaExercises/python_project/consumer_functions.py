@@ -10,7 +10,7 @@ def db_engine():
 def consumer(topic):
     consumer = Consumer({
         'bootstrap.servers': 'localhost:9092',
-        'group.id': 'my-group',
+        'group.id': 'roxana-project-group',
         'auto.offset.reset': 'earliest'
     })
     consumer.subscribe([topic])
@@ -22,6 +22,12 @@ def handling_message(dw_mk_msg):
     return df
 
 def db_materialization(table_name, engine, json_df):
+    try:
+        json_df.to_sql(table_name, engine, if_exists='append', index=False)
+    except Exception as e:
+        print(f"Wrong data materialization: {e}")
+
+def db_materialization_transformed(table_name, engine, json_df):
     try:
         json_df.to_sql(table_name, engine, if_exists='append', index=False)
     except Exception as e:

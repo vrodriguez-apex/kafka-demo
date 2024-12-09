@@ -4,7 +4,7 @@ topic_name = 'rand-int-topic'
 
 conf = {
     'bootstrap.servers': 'localhost:9092',
-    'group.id': 'my-group',
+    'group.id': 'roxana-project-group',
     'auto.offset.reset': 'earliest'
 }
 
