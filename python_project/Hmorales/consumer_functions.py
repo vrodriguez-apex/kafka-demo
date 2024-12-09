@@ -26,7 +26,6 @@ def db_engine():
   		user=dbcredentials['dbuser'],
   		password=dbcredentials['passd'],
 	)
-	table_name = 'assethist'
 		
 	mycursor = mydb.cursor()
 
@@ -59,7 +58,9 @@ def handling_message(dw_mk_msg):
 
 	The loop can be over the script and just call the function inside the loop.
 	"""
-	print (f'dw_mk_msg {dw_mk_msg.value()}')
+	print (f'valores para enviar a la BD dw_mk_msg {dw_mk_msg}')
+	
+
 
 def db_materialization(engine, json_df, mydb):
 	"""
@@ -73,11 +74,12 @@ def db_materialization(engine, json_df, mydb):
 	corrections	to your code and register the errors that you could have.
 	"""
 
-	dfasset = pd.read_json(json_df)
-	#table_name = dfasset['name'][0,table_name.find('-') - 1].join('data')
-	sql_insert =f''' Insert into btcdata (name,tdate,tadj_close,tclose,thigh,tlow,topen,tvolume)
+	dfasset = pd.DataFrame.from_dict(json.loads(json_df))
+	table_name = dfasset['name'].replace('-','_')+'_data'
+	sql_insert =f''' Insert into {table_name} (name,tdate,tadj_close,tclose,thigh,tlow,topen,tvolume)
 	#values (%s,%s,%s,%s,%s,%s,%s,%s);
 	#'''
+	print(f'table_name: {table_name}')
 	data_tuples=[(row['name']
                 ,row['tdate'].date()
                 ,row['tadj_close']
@@ -87,18 +89,14 @@ def db_materialization(engine, json_df, mydb):
                 ,row['topen']
                 ,row['tvolume'])
                 for _,row in dfasset.iterrows()]
-	#print(f'size of tuples {len(data_tuples[0])}')
-	print(f' insert query:{sql_insert}')
-	#print(f'tuples value 1: {data_tuples[0]}')
-	#print(f'tuples value 1: {data_tuples[0][0]}')
-	#print(f'tuples value 8: {data_tuples[0][7]}')
+	print(f' insert query:{sql_insert} value 1: {data_tuples[0]} value 8: {data_tuples[0][7]}')
 
   	#start to save into a mysql table
   	
 	for x in range(0,len(data_tuples)):
 		batch = data_tuples[x]
-		print(f'size of tuples {len(batch[0])}')
-		print(f'tuples value 1: {batch[0][0]}')
+		#print(f'size of tuples {len(batch[0])}')
+		#print(f'tuples value 1: {batch[0][0]}')
 		engine.executemany(sql_insert,batch)
-		#mydb.commit()
+		mydb.commit()
 
