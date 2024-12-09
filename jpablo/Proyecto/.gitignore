@@ -1,0 +1,27 @@
+# Evitar archivos de credenciales sensibles
+db_credentials.json
+
+# Archivos de configuración de entornos virtuales
+venv/
+.env
+__pycache__/
+
+# Archivos de logs
+*.log
+
+# Archivos específicos de Jupyter Notebooks
+.ipynb_checkpoints/
+
+# Archivos específicos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Excluir dependencias descargadas por pip
+*.egg-info/
+*.pyc
+*.pyo
+*.pyd
+
+# Excluir configuraciones de IDEs
+.vscode/
+.idea/
